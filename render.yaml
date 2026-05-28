@@ -3,7 +3,7 @@ services:
     name: findit-backend
     runtime: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py create_admin"
     startCommand: "gunicorn lateefah.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
@@ -17,4 +17,8 @@ services:
       - key: CORS_ALLOW_ALL_ORIGINS
         value: "True"
       - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
         sync: false
