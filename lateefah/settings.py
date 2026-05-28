@@ -91,8 +91,12 @@ STORAGES = {
 
 # Use Cloudinary for user-uploaded media when configured (production);
 # fall back to local filesystem for development.
-CLOUDINARY_URL = config("CLOUDINARY_URL", default="")
-if CLOUDINARY_URL:
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default=""),
+    "API_KEY": config("CLOUDINARY_API_KEY", default=""),
+    "API_SECRET": config("CLOUDINARY_API_SECRET", default=""),
+}
+if CLOUDINARY_STORAGE["CLOUD_NAME"]:
     STORAGES["default"]["BACKEND"] = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
