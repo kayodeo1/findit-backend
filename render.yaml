@@ -19,6 +19,8 @@ services:
       - key: CSRF_TRUSTED_ORIGINS
         sync: false
       - key: ADMIN_EMAIL
+        value:admin@findit.com
         sync: false
       - key: ADMIN_PASSWORD
+        value:@dm!n0o1
         sync: false
