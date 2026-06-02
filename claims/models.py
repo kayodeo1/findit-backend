@@ -17,6 +17,9 @@ class Claim(models.Model):
     proof = models.TextField(help_text="Proof of ownership description")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     rejection_reason = models.TextField(blank=True)
+    admin_query = models.TextField(
+        blank=True, help_text="Question the admin raises with the claimant while reviewing"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

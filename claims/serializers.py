@@ -11,9 +11,13 @@ class ClaimSerializer(serializers.ModelSerializer):
         model = Claim
         fields = [
             "id", "item", "item_name", "item_status", "owner", "owner_name",
-            "proof", "status", "rejection_reason", "created_at", "updated_at",
+            "proof", "status", "rejection_reason", "admin_query",
+            "created_at", "updated_at",
         ]
-        read_only_fields = ["id", "owner", "status", "rejection_reason", "created_at", "updated_at"]
+        read_only_fields = [
+            "id", "owner", "status", "rejection_reason", "admin_query",
+            "created_at", "updated_at",
+        ]
 
     def get_owner_name(self, obj):
         return obj.owner.get_full_name() or obj.owner.username

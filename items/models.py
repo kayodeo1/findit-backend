@@ -11,10 +11,13 @@ class Item(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     color = models.CharField(max_length=100)
+    model = models.CharField(max_length=255, blank=True)
+    serial_no = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255)
     date = models.DateField()
     status = models.CharField(max_length=20, choices=Status.choices)
     image = models.ImageField(upload_to="items/", blank=True, null=True)
+    owner_photo = models.ImageField(upload_to="owners/", blank=True, null=True)
     reported_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

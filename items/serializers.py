@@ -6,17 +6,22 @@ class ItemSerializer(serializers.ModelSerializer):
     reported_by_name = serializers.SerializerMethodField()
     reported_by_role = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
+    owner_photo_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
         fields = [
-            "id", "name", "description", "color", "location", "date",
-            "status", "image", "image_url",
+            "id", "name", "description", "color", "model", "serial_no",
+            "location", "date", "status", "image", "image_url",
+            "owner_photo", "owner_photo_url",
             "reported_by", "reported_by_name", "reported_by_role",
             "created_at", "updated_at",
         ]
         read_only_fields = ["id", "reported_by", "created_at", "updated_at"]
-        extra_kwargs = {"image": {"write_only": True, "required": False}}
+        extra_kwargs = {
+            "image": {"write_only": True, "required": False},
+            "owner_photo": {"write_only": True, "required": False},
+        }
 
     def get_reported_by_name(self, obj):
         return obj.reported_by.get_full_name() or obj.reported_by.username
@@ -31,6 +36,14 @@ class ItemSerializer(serializers.ModelSerializer):
         if request:
             return request.build_absolute_uri(obj.image.url)
         return obj.image.url
+
+    def get_owner_photo_url(self, obj):
+        if not obj.owner_photo:
+            return None
+        request = self.context.get("request")
+        if request:
+            return request.build_absolute_uri(obj.owner_photo.url)
+        return obj.owner_photo.url
 
     def create(self, validated_data):
         validated_data["reported_by"] = self.context["request"].user

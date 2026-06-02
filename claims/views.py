@@ -99,6 +99,25 @@ class ClaimReviewView(APIView):
         return Response(ClaimSerializer(claim).data)
 
 
+class ClaimQueryView(APIView):
+    """Admin raises a question on a pending claim without resolving it."""
+    permission_classes = [IsAdmin]
+
+    def post(self, request, pk):
+        try:
+            claim = Claim.objects.select_related("item", "owner").get(pk=pk)
+        except Claim.DoesNotExist:
+            return Response({"detail": "Claim not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        query = (request.data.get("admin_query") or "").strip()
+        if not query:
+            return Response({"detail": "Query text is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        claim.admin_query = query
+        claim.save(update_fields=["admin_query", "updated_at"])
+        return Response(ClaimSerializer(claim).data)
+
+
 class ClaimHistoryView(generics.ListAPIView):
     serializer_class = StatusHistorySerializer
     permission_classes = [permissions.IsAuthenticated]
