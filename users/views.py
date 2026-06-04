@@ -82,6 +82,14 @@ class LoginView(APIView):
         if user is None:
             return Response({"detail": "Invalid email or password."}, status=401)
 
+        # The role is chosen at sign-in: a single account can act as either an
+        # owner or a finder. Switch the active role to match the selection
+        # (admins keep their role and are never downgraded).
+        role = (request.data.get("role") or "").strip().lower()
+        if role in User.SELF_SERVICE_ROLES and user.role != "admin" and user.role != role:
+            user.role = role
+            user.save(update_fields=["role"])
+
         token = make_token(user)
         return Response({"token": token, "user": UserProfileSerializer(user).data})
 
